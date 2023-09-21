@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    connection_pool (2.4.1)
     multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
@@ -14,6 +15,10 @@ GEM
     rackup (1.0.0)
       rack (< 3)
       webrick
+    redis (5.0.7)
+      redis-client (>= 0.9.0)
+    redis-client (0.17.0)
+      connection_pool
     ruby2_keywords (0.0.5)
     sinatra (3.1.0)
       mustermann (~> 3.0)
@@ -37,6 +42,7 @@ DEPENDENCIES
   pg (~> 1.5.3)
   puma
   rackup
+  redis
   sinatra (~> 3.1.0)
   sinatra-contrib
 

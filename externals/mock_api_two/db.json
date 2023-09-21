@@ -4,14 +4,14 @@
       "id": "16",
       "name": "George Costanza",
       "birthdate": "1984-09-07",
-      "province": "ON",
+      "province_code": "ON",
       "clinic_id": "7",
-      "allergies": [
+      "allergies_list": [
         "hair",
         "mean people",
         "paying the bill"
       ],
-      "recent_medical_visits": 17
+      "medical_visits_recently": 17
     }
   ],
   "auth_tokens": [

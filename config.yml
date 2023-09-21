@@ -3,10 +3,6 @@ persistence:
 integrations:
   vendors:
     one:
-      api_base_url: localhost:3060
-      app_id: 30dj2439dujrs
-      app_secret: 240fnuc4v938fjskWW^#49w # not a real secret key
+      api_base_url: mock_api_one:80
     two:
-      api_base_url: localhost:3061
-      app_id: 30d94fjrvek3d9ri
-      app_secret: $#%$G^$535dr8gj34iersSErt # not a real secret key
+      api_base_url: mock_api_two:80
