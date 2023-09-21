@@ -34,7 +34,7 @@ PLATFORMS
   x86_64-darwin-21
 
 DEPENDENCIES
-  pg
+  pg (~> 1.5.3)
   puma
   rackup
   sinatra (~> 3.1.0)
