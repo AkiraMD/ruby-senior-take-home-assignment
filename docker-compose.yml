@@ -1,0 +1,65 @@
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:13
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./db/schema_snapshots/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5439:5432'
+    environment:
+      POSTGRES_USER: vandelay_app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: vandelay
+      POSTGRES_HOST: vandelay
+    command: postgres -c stats_temp_directory=/tmp
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U vandelay_app -d vandelay'"]
+      interval: 25s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - '6387:6379'
+    restart: unless-stopped
+
+  mock_api_one:
+    container_name: mock_api_one
+    image: clue/json-server
+    volumes:
+      - ./externals/mock_api_one:/data
+    ports:
+      - "3060:80"
+
+  mock_api_two:
+    container_name: mock_api_two
+    image: clue/json-server
+    volumes:
+      - ./externals/mock_api_one:/data
+    ports:
+      - "3061:80"
+
+  rest_server:
+    build: .
+    container_name: rest_server
+    volumes:
+      - .:/app
+    ports:
+      - '3087:3087'
+    working_dir: /app
+    entrypoint:
+      - ./entry.sh
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      mock_api_one:
+        condition: service_started
+      mock_api_two:
+        condition: service_started
+    restart: on-failure

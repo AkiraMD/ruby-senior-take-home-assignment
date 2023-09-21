@@ -1,0 +1,19 @@
+{
+  "patients": [
+    {
+      "id": "743",
+      "full_name": "Cosmo Kramer",
+      "dob": "1987-03-18",
+      "province": "QC",
+      "allergies": [
+        "work",
+        "conformity",
+        "paying taxes"
+      ],
+      "recent_medical_visits": 1
+    }
+  ],
+  "auth": [
+    { "id": "1", "token": "129e8ry23uhj23948rhu23" }
+  ]
+}
