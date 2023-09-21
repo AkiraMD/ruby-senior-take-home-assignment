@@ -2,14 +2,16 @@ services:
   postgres:
     container_name: postgres
     image: postgres:13
-    # volumes:
-      # - ./db/schema_snapshots/init.sql.gz:/docker-entrypoint-initdb.d/init.sql.gz
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+      - ./db/schema_snapshots/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - '5439:5432'
     environment:
       POSTGRES_USER: vandelay_app
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: vandelay
+      POSTGRES_HOST: vandelay
     command: postgres -c stats_temp_directory=/tmp
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U vandelay_app -d vandelay'"]
@@ -42,16 +44,12 @@ services:
       - "3061:80"
 
   rest_server:
-    build:
-      context: .
+    build: .
     container_name: rest_server
     volumes:
       - .:/app
     ports:
       - '3087:3087'
-    environment:
-      PGUSER: vandelay_app
-      PGPASSWORD: secret
     working_dir: /app
     entrypoint:
       - ./entry.sh
@@ -65,8 +63,3 @@ services:
       mock_api_two:
         condition: service_started
     restart: on-failure
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:3087/system_status || exit 1
-      interval: 1m
-      timeout: 10s
-      retries: 5

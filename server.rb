@@ -7,8 +7,11 @@ $: << BASE_PATH + "/lib"
 
 require 'vandelay'
 require 'vandelay/rest'
+require 'vandelay/util/db'
 
 class RESTServer < Sinatra::Base
+  Vandelay::Util::DB.verify_connection!
+
   configure do
     set :port, 3087
     set :bind, '0.0.0.0'

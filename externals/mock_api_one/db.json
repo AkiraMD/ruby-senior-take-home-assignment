@@ -1,16 +1,16 @@
 {
   "patients": [
     {
-      "id": "874",
+      "id": "743",
       "full_name": "Cosmo Kramer",
       "dob": "1987-03-18",
-      "province": "QC"
-    },
-    {
-      "id": "9324",
-      "full_name": "George Costanza",
-      "dob": "1984-09-07",
-      "province": "ON"
+      "province": "QC",
+      "allergies": [
+        "work",
+        "conformity",
+        "paying taxes"
+      ],
+      "recent_medical_visits": 1
     }
   ],
   "auth": [

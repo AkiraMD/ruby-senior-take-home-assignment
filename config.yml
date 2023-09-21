@@ -1,8 +1,5 @@
 persistence:
-  db_user: vandelay_app
-  db_password: secret
-  db_name: vandelay
-  db_port: 5432
+  pg_url: postgresql://vandelay_app:secret@postgres:5432/vandelay
 integrations:
   vendors:
     one:
