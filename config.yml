@@ -1,0 +1,15 @@
+persistence:
+  db_user: vandelay_app
+  db_password: secret
+  db_name: vandelay
+  db_port: 5432
+integrations:
+  vendors:
+    one:
+      api_base_url: localhost:3060
+      app_id: 30dj2439dujrs
+      app_secret: 240fnuc4v938fjskWW^#49w # not a real secret key
+    two:
+      api_base_url: localhost:3061
+      app_id: 30d94fjrvek3d9ri
+      app_secret: $#%$G^$535dr8gj34iersSErt # not a real secret key

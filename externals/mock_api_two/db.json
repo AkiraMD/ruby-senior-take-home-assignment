@@ -1,0 +1,21 @@
+{
+  "patients": [
+    {
+      "id": "874",
+      "name": "Cosmo Kramer",
+      "birthdate": "1987-03-18",
+      "province": "QC",
+      "clinic_id": "3"
+    },
+    {
+      "id": "9324",
+      "name": "George Costanza",
+      "birthdate": "1984-09-07",
+      "province": "ON",
+      "clinic_id": "7"
+    }
+  ],
+  "auth_tokens": [
+    { "id": "1", "auth_token": "349rijed934r8ij123$==" }
+  ]
+}
