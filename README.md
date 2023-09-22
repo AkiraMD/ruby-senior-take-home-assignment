@@ -72,7 +72,7 @@ http://localhost:3087
 ```
 
 ### Making changes
-1. For this repo, clone it, and branch off of the `main` branch of your newly cloned fork. Please name it with the following convention:
+1. Fork this repo, clone it, and branch off of the `main` branch of your newly cloned fork. Please name it with the following convention:
 ```
 <your initials>/interview/ruby-take-home
 ```
