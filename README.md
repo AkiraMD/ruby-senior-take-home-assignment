@@ -72,7 +72,7 @@ http://localhost:3087
 ```
 
 ### Making changes
-1. Branch off of the `main` branch of this repo. Please name it with the following convention:
+1. For this repo, clone it, and branch off of the `main` branch of your newly cloned fork. Please name it with the following convention:
 ```
 <your initials>/interview/ruby-take-home
 ```
@@ -81,6 +81,6 @@ http://localhost:3087
 
 3. Writing tests is not required for this assignment. You may focus on the requirements above.
 
-4. When you are complete your work, push your work up to our github (the origin cloned from), and open a PR against the `main` branch. Please label the PR the same as your branch name, and write a PR description that will help us best assess your work. This is your chance to point out where you had problems, what you would have done better, or give context to decisions in your work that was not already commented on in code comments.
+4. When you are complete your work, push your work up to your github, open a PR against the `main` branch, and send us the link. Please label the PR the same as your branch name, and write a PR description that will help us best assess your work. This is your chance to point out where you had problems, what you would have done better, or give context to decisions in your work that was not already commented on in code comments.
 
 5. Once your PR is opened, we will review it and respond to you as soon as we can.
