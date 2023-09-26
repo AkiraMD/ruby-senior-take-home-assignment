@@ -20,6 +20,27 @@ services:
       retries: 5
     restart: unless-stopped
 
+  postgres-test:
+    container_name: postgres-test
+    image: postgres:13
+    volumes:
+      - ./postgres-data-test:/var/lib/postgresql/data
+      - ./db/schema_snapshots/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - '5440:5432'
+    environment:
+      POSTGRES_USER: vandelay_app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: vandelay_test
+      POSTGRES_HOST: vandelay_test
+    command: postgres -c stats_temp_directory=/tmp
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U vandelay_app -d vandelay_test'"]
+      interval: 25s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   redis:
     container_name: redis
     image: redis:latest
@@ -55,6 +76,8 @@ services:
       - ./entry.sh
     depends_on:
       postgres:
+        condition: service_healthy
+      postgres-test:
         condition: service_healthy
       redis:
         condition: service_started
