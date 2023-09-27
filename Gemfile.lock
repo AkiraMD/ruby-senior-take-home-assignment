@@ -2,11 +2,17 @@ GEM
   remote: https://rubygems.org/
   specs:
     connection_pool (2.4.1)
+    io-console (0.6.0)
+    irb (1.8.1)
+      rdoc
+      reline (>= 0.3.8)
     multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     nio4r (2.5.9)
     pg (1.5.4)
+    psych (5.1.0)
+      stringio
     puma (6.3.1)
       nio4r (~> 2.0)
     rack (2.2.8)
@@ -15,10 +21,14 @@ GEM
     rackup (1.0.0)
       rack (< 3)
       webrick
+    rdoc (6.5.0)
+      psych (>= 4.0.0)
     redis (5.0.7)
       redis-client (>= 0.9.0)
     redis-client (0.17.0)
       connection_pool
+    reline (0.3.8)
+      io-console (~> 0.5)
     ruby2_keywords (0.0.5)
     sinatra (3.1.0)
       mustermann (~> 3.0)
@@ -31,6 +41,7 @@ GEM
       rack-protection (= 3.1.0)
       sinatra (= 3.1.0)
       tilt (~> 2.0)
+    stringio (3.0.8)
     tilt (2.3.0)
     webrick (1.8.1)
 
@@ -39,6 +50,7 @@ PLATFORMS
   x86_64-darwin-21
 
 DEPENDENCIES
+  irb
   pg (~> 1.5.3)
   puma
   rackup

@@ -1,0 +1,8 @@
+persistence:
+  pg_url: postgresql://vandelay_app:secret@postgres-test:5432/vandelay_test
+integrations:
+  vendors:
+    one:
+      api_base_url: mock_api_one:80
+    two:
+      api_base_url: mock_api_two:80
