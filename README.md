@@ -57,7 +57,7 @@ Authentication:
 
 3. The patient records retrieved from the vendors does not change frequently, and we've been asked to improve performance when fetching the records through the `PatientRecords`. Implement a caching strategy that will reduce the overhead of network requests for patient records. Keep in mind that the data is acceptably stale up to 10 minutes, but should be refetched again in order to maintain (mostly) reliable data accuracy.
 
-4. Implement a ruby test framework, and add tests for your code. This will require adding necessary dependencies, so you may add those into the repo `Gemfile` as needed. You may choose any framework you would like. Use your best discretion as to your testing methodology and approach.
+4. Implement a ruby test framework, and add tests for your code. This will require adding necessary dependencies, so you may add those into the repo `Gemfile` as needed. You may choose any framework you would like. Use your best discretion as to your testing methodology and approach. Please provide instructions on how to run tests in your submission.
 *Note:* You will need to rebuild your docker build when adding new dependencies. Further instructions below.
 
 ### Getting Started
