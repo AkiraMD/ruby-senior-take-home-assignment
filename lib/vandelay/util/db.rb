@@ -36,7 +36,12 @@ module Vandelay
       def self.verify_connection!
         connection = Vandelay::Util::DB::Connection.new
         puts "Successfully connected to #{connection.db}!"
+        @connection_verified = true
         connection.close
+      end
+
+      def self.connection_verified?
+        @connection_verified ||= false
       end
     end
   end
