@@ -36,8 +36,8 @@ services:
     command: postgres -c stats_temp_directory=/tmp
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U vandelay_app -d vandelay_test'"]
-      interval: 25s
-      timeout: 5s
+      interval: 3s
+      timeout: 3s
       retries: 5
     restart: unless-stopped
 
@@ -76,9 +76,9 @@ services:
       - ./entry.sh
     depends_on:
       postgres:
-        condition: service_healthy
+        condition: service_started
       postgres-test:
-        condition: service_healthy
+        condition: service_started
       redis:
         condition: service_started
       mock_api_one:

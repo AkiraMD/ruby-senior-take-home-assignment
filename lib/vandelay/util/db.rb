@@ -25,7 +25,7 @@ module Vandelay
       #
       # @param [Proc] requires a block to be given
       # @return returns what the given block returns
-      def self.with_default_connection(&block)
+      def self.with_connection(&block)
         fail ArgumentError, "block must be given!" unless block_given?
         connection = Vandelay::Util::DB::Connection.new
         result = yield(connection)

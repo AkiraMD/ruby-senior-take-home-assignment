@@ -10,14 +10,16 @@ This repo is a basic ruby api server that serves several endpoints. As an engine
 - redis
 - sinatra (3.1.0)
 - docker
+- irb
 
 ### Project Overview
 The project is quite simple, but a few notes:
 - You will need to restart your docker container to see changes.
 - Your code changes only need to be done in the `/lib` directory.
 - The `/lib/rest.rb` file is responsible for requiring all files found in the `/lib/rest` directory, and mounting the endpoints. As long as new files are a direct child of the `/lib/rest` directory, following the convention in the provided examples, you should not have to do anything else beyond that.
-- Several util modules and classes exist. Feel free to extend them, modify them, or remove them as you see fit.
-- Please do not add any additional libraries to the project. Everything you need has already been made available to you in this repo.
+- Several util modules and classes exist. Feel free to extend them, modify them, or remove them as you see fit. But be sure to read through the code before doing work that may already be done for you.
+- Please do not add any additional libraries to the project for requirements specified. Everything you need has already been made available to you in this repo. The only exception to this rule is requirement 4, where you are asked to implement a test framework and tests for your work.
+- There is a convention to the architecture of this codebase, do your best to follow convention where you can, and if you deviate from convention or make changes to this, note this in your submission as to why those changes were made. (We are aware that this is by no means production-ready code, so there are several areas of improvement)
 
 ### Requirements
 1. In the `/lib/vandelay/rest/patients_patient.rb` file, add a new endpoint that retrieves a single patient from the db, and responds with it. Errors are expected to be accounted for and handled appropriately.
@@ -55,6 +57,9 @@ Authentication:
 
 3. The patient records retrieved from the vendors does not change frequently, and we've been asked to improve performance when fetching the records through the `PatientRecords`. Implement a caching strategy that will reduce the overhead of network requests for patient records. Keep in mind that the data is acceptably stale up to 10 minutes, but should be refetched again in order to maintain (mostly) reliable data accuracy.
 
+4. Implement a ruby test framework, and add tests for your code. This will require adding necessary dependencies, so you may add those into the repo `Gemfile` as needed. You may choose any framework you would like. Use your best discretion as to your testing methodology and approach.
+*Note:* You will need to rebuild your docker build when adding new dependencies. Further instructions below.
+
 ### Getting Started
 For ease of setup, we've dockerized this project to avoid installation and setup of different dependencies. However, you are required to have `docker` installed. If you haven't installed `docker`, please install it now.
 
@@ -71,6 +76,17 @@ This should start all the servers required up, and initialize the project. You w
 http://localhost:3087
 ```
 
+*Hint*: Should you make changes to the Gemfile or some other top-level files, you may need to re-build your docker image. You can do so by doing the following:
+1. Ensure your docker container is down:
+```bash
+docker compose down
+```
+
+2. Bring it back up, with the build flag, forcing the build stage to run:
+```bash
+docker compose up -d --build
+```
+
 ### Making changes
 1. Fork this repo, clone it, and branch off of the `main` branch of your newly cloned fork. Please name it with the following convention:
 ```
@@ -79,8 +95,15 @@ http://localhost:3087
 
 2. Commit your work as you would on any other project.
 
-3. Writing tests is not required for this assignment. You may focus on the requirements above.
+3. When you are complete your work, push your work up to your github, open a PR against the `main` branch, and send us the link. Please label the PR the same as your branch name, and write a PR description that will help us best assess your work. This is your chance to point out where you had problems, what you would have done better, or give context to decisions in your work that was not already commented on in code comments.
 
-4. When you are complete your work, push your work up to your github, open a PR against the `main` branch, and send us the link. Please label the PR the same as your branch name, and write a PR description that will help us best assess your work. This is your chance to point out where you had problems, what you would have done better, or give context to decisions in your work that was not already commented on in code comments.
+4. Once your PR is opened, we will review it and respond to you as soon as we can.
 
-5. Once your PR is opened, we will review it and respond to you as soon as we can.
+### Additional notes
+If you'd like to use the ruby REPL for evaluating code within the `/lib` you are welcome to use the provided console implementation. If you access your docker container for the `rest_server` service, you may use the cli to enter the following command:
+
+```bash
+bundle exec ruby console.rb
+```
+
+This will initialize the boot procedure for the app, setup require paths for the `vandelay` namespace, initialize and test a db connection, and include the models in the `/models` directory.
