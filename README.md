@@ -26,6 +26,16 @@ The project is quite simple, but a few notes:
 
 2. We've been asked to implement integrations with two external apis for vendor apis that serve patient records. They have different specs, and we need a way to intechangeably fetch records from them based on 2 columns in the `patients` table - `records_vendor` and `vendor_id`. `records_vendor` is an identifier for which integration to fetch the patient records from, and `vendor_id` is the patient's record id in that vendor's system. You are expected to implement the code in the `/lib/vandelay/services/patient_records.rb` file to fetch patient records for a given `patient` object, based on the patient data. The integration code may be added where you see fit, however the `/lib/vandelay/integrations` directory has been provided for you if you wish to use it. The patient records should be retrievable by a new API endpoint `/patients/:patient_id/record` - you will need to add this in an appropriate place in the code.
 
+The payload shape for this endpoint should look like the following:
+```json
+{
+  "patient_id": <patient id>,
+  "province": <province code>,
+  "allergies": [<array of allergies>],
+  "num_medical_visits": <number of medical visits>
+}
+```
+
 - Connection urls for both integration vendors can be found in the `config.yml` file in the repo root.
 - Both vendor apis require authentication (we've faked this process for this assignment, but the implementation is expected in the integrations) - vendor-specific details below
 - The integration classes should implement the same interface.
