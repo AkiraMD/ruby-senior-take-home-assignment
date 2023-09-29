@@ -4,7 +4,7 @@ module Vandelay
 
       def self.all
         results = self.with_connection do |conn|
-          conn.exec("SELECT * FROM patients").to_a
+          conn.exec("SELECT * FROM patients ORDER BY id").to_a
         end
 
         results.map do |patient_hash|
