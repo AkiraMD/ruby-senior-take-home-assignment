@@ -4,6 +4,10 @@ RSpec.describe '/patients/:patient_id/record' do
   subject(:response) { get '/patients/1/record' }
   subject(:json_response) { JSON.parse(response.body) }
 
+  before do
+    Vandelay::REST::PatientsPatientRecord.patients_records_srvc.instance_variable_get(:@cache).reset_cache
+  end
+
   context 'no patients' do
     it { expect(response).to have_attributes(status: 404) }
     it { expect(response.body).to be_empty }
@@ -98,6 +102,44 @@ RSpec.describe '/patients/:patient_id/record' do
 
           expect(json_response).to eq(expected_json)
         end
+
+        context 'patients record was last requested 9 minutes ago' do
+          before do
+            Timecop.travel Time.now - (60 * 9) do
+              get '/patients/1/record'
+            end
+            Timecop.freeze
+
+            stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
+              .to_return(status: 500)
+          end
+
+          it 'uses cached patient record' do
+            expect(response).to have_attributes(status: 200)
+
+            assert_requested :get, "#{vendor_base_url}/patients/#{patient.vendor_id}",
+                             times: 1
+          end
+        end
+
+        context 'patients record was last requested 11 minutes ago' do
+          before do
+            Timecop.travel Time.now - (60 * 11) do
+              get '/patients/1/record'
+            end
+            Timecop.freeze
+
+            stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
+              .to_return(status: 500)
+          end
+
+          it 'does not use cached patient record' do
+            expect(response).to have_attributes(status: 503)
+
+            assert_requested :get, "#{vendor_base_url}/patients/#{patient.vendor_id}",
+                             times: 2
+          end
+        end
       end
 
       context 'vendor API is down' do
@@ -121,7 +163,6 @@ RSpec.describe '/patients/:patient_id/record' do
       end
     end
   end
-
 
   context 'patient exists for records vendor "two"' do
     let(:vendor_base_url) { 'http://vendor-two' }
@@ -212,6 +253,44 @@ RSpec.describe '/patients/:patient_id/record' do
           }
 
           expect(json_response).to eq(expected_json)
+        end
+
+        context 'patients record was last requested 9 minutes ago' do
+          before do
+            Timecop.travel Time.now - (60 * 9) do
+              get '/patients/1/record'
+            end
+            Timecop.freeze
+
+            stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+              .to_return(status: 500)
+          end
+
+          it 'uses cached patient record' do
+            expect(response).to have_attributes(status: 200)
+
+            assert_requested :get, "#{vendor_base_url}/records/#{patient.vendor_id}",
+                             times: 1
+          end
+        end
+
+        context 'patients record was last requested 11 minutes ago' do
+          before do
+            Timecop.travel Time.now - (60 * 11) do
+              get '/patients/1/record'
+            end
+            Timecop.freeze
+
+            stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+              .to_return(status: 500)
+          end
+
+          it 'does not use cached patient record' do
+            expect(response).to have_attributes(status: 503)
+
+            assert_requested :get, "#{vendor_base_url}/records/#{patient.vendor_id}",
+                             times: 2
+          end
         end
       end
 
