@@ -401,4 +401,26 @@ RSpec.describe '/patients/:patient_id/record' do
       end
     end
   end
+
+  context 'patient exists for records vendor nil' do
+    let!(:patient) do
+      create :patient,
+             records_vendor: nil,
+             vendor_id: 45
+    end
+
+    it { expect(response).to have_attributes(status: 404) }
+    it { expect(response.body).to be_empty }
+  end
+
+  context 'patient exists for records vendor "three"' do
+    let!(:patient) do
+      create :patient,
+             records_vendor: 'three',
+             vendor_id: 45
+    end
+
+    it { expect(response).to have_attributes(status: 503) }
+    it { expect(response.body).to be_empty }
+  end
 end

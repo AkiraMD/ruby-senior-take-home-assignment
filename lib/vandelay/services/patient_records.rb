@@ -35,8 +35,10 @@ module Vandelay
           @vendor_one.retrieve_record_for_patient patient.vendor_id
         when 'two'
           @vendor_two.retrieve_record_for_patient patient.vendor_id
+        when nil
+          Integrations::Models::VendorRecordResult.not_found
         else
-          raise 'Unsupported vendor'
+          Integrations::Models::VendorRecordResult.unexpected_error
         end
       end
     end
