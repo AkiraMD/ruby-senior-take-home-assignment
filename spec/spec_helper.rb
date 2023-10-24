@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'webmock/rspec'
+
 # include all files in the ./support directory
 Dir[File.dirname(__FILE__) + '/support/**.rb'].each {|rb| require_relative rb }
 

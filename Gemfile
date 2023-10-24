@@ -15,6 +15,7 @@ group :test do
   gem 'rack-test', '~> 2.1'
   gem 'factory_bot', '~> 6.3'
   gem 'faker'
+  gem 'webmock'
 end
 
 group :development do
