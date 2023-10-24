@@ -8,3 +8,9 @@ gem 'sinatra-contrib'
 gem 'puma'
 gem 'rackup'
 gem 'irb'
+
+group :test do
+  gem 'rspec', '~> 3.12'
+  gem 'database_cleaner-sequel'
+  gem 'rack-test', '~> 2.1'
+end
