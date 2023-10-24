@@ -6,3 +6,4 @@ integrations:
       api_base_url: vendor-one
     two:
       api_base_url: vendor-two
+environment: test

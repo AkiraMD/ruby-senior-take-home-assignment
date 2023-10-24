@@ -41,7 +41,7 @@ RSpec.describe '/patients/:patient_id/record' do
 
       before do
         stub_request(:get, 'http://vendor-one/auth/1')
-          .to_return(status: 200, body: { "id": "1", "token": auth_token })
+          .to_return(status: 200, body: { "id": "1", "token": auth_token }.to_json)
 
         stub_request(:get, "http://vendor-one/patients/#{patient.vendor_id}")
       end
