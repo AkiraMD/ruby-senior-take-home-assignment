@@ -16,3 +16,7 @@ group :test do
   gem 'factory_bot', '~> 6.3'
   gem 'faker'
 end
+
+group :development do
+  gem 'rake'
+end
