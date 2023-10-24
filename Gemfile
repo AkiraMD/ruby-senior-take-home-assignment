@@ -13,4 +13,6 @@ group :test do
   gem 'rspec', '~> 3.12'
   gem 'database_cleaner-sequel'
   gem 'rack-test', '~> 2.1'
+  gem 'factory_bot', '~> 6.3'
+  gem 'faker'
 end

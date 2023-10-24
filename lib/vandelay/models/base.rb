@@ -4,12 +4,11 @@ require 'vandelay/util/db'
 module Vandelay
   module Models
     class Base
-
       def initialize(**data)
         data.each do |prop, val|
           self.instance_variable_set "@#{prop}", val
           self.class.class_eval do
-            define_method("#{prop}") { val }
+            define_method("#{prop}") { val } unless instance_methods(false).include?(prop.to_sym)
           end
         end
       end
@@ -22,7 +21,7 @@ module Vandelay
         end
       end
 
-      def to_json(_opts)
+      def to_json(_opts = nil)
         JSON.dump(self.to_h)
       end
 

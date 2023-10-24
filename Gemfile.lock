@@ -1,20 +1,42 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (7.1.1)
+      base64
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      connection_pool (>= 2.2.5)
+      drb
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      mutex_m
+      tzinfo (~> 2.0)
+    base64 (0.1.1)
     bigdecimal (3.1.4)
+    concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
     database_cleaner-core (2.0.1)
     database_cleaner-sequel (2.0.2)
       database_cleaner-core (~> 2.0.0)
       sequel
     diff-lcs (1.5.0)
+    drb (2.1.1)
+      ruby2_keywords
+    factory_bot (6.3.0)
+      activesupport (>= 5.0.0)
+    faker (3.2.1)
+      i18n (>= 1.8.11, < 2)
+    i18n (1.14.1)
+      concurrent-ruby (~> 1.0)
     io-console (0.6.0)
     irb (1.8.1)
       rdoc
       reline (>= 0.3.8)
+    minitest (5.20.0)
     multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
+    mutex_m (0.1.2)
     nio4r (2.5.9)
     pg (1.5.4)
     psych (5.1.0)
@@ -66,6 +88,8 @@ GEM
       tilt (~> 2.0)
     stringio (3.0.8)
     tilt (2.3.0)
+    tzinfo (2.0.6)
+      concurrent-ruby (~> 1.0)
     webrick (1.8.1)
 
 PLATFORMS
@@ -75,6 +99,8 @@ PLATFORMS
 
 DEPENDENCIES
   database_cleaner-sequel
+  factory_bot (~> 6.3)
+  faker
   irb
   pg (~> 1.5.3)
   puma

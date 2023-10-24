@@ -1,6 +1,11 @@
 module Vandelay
   module Models
     class Patient < Vandelay::Models::Base
+      attr_accessor :id
+      attr_accessor :full_name
+      attr_accessor :date_of_birth
+      attr_accessor :vendor_id
+      attr_accessor :records_vendor
 
       def self.all
         results = self.with_connection do |conn|
@@ -20,7 +25,6 @@ module Vandelay
 
         Vandelay::Models::Patient.new(**result)
       end
-
     end
   end
 end
