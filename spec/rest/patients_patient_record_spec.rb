@@ -10,6 +10,7 @@ RSpec.describe '/patients/:patient_id/record' do
   end
 
   context 'patient exists for records vendor "one"' do
+    let(:vendor_base_url) { 'http://vendor-one' }
     let!(:patient) do
       create :patient,
              records_vendor: 'one',
@@ -18,7 +19,7 @@ RSpec.describe '/patients/:patient_id/record' do
 
     context 'authentication API is down' do
       before do
-        stub_request(:get, 'http://vendor-one/auth/1')
+        stub_request(:get, "#{vendor_base_url}/auth/1")
           .to_timeout
       end
 
@@ -28,7 +29,7 @@ RSpec.describe '/patients/:patient_id/record' do
 
     context 'authentication API returns system error' do
       before do
-        stub_request(:get, 'http://vendor-one/auth/1')
+        stub_request(:get, "#{vendor_base_url}/auth/1")
           .to_return(status: 500)
       end
 
@@ -40,23 +41,23 @@ RSpec.describe '/patients/:patient_id/record' do
       let(:auth_token) { Faker::Alphanumeric.alphanumeric }
 
       before do
-        stub_request(:get, 'http://vendor-one/auth/1')
+        stub_request(:get, "#{vendor_base_url}/auth/1")
           .to_return(status: 200, body: { "id": "1", "token": auth_token }.to_json)
 
-        stub_request(:get, "http://vendor-one/patients/#{patient.vendor_id}")
+        stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
       end
 
       it 'uses authentication token in subsequent requests' do
         response
 
-        assert_requested :get, "http://vendor-one/patients/#{patient.vendor_id}",
+        assert_requested :get, "#{vendor_base_url}/patients/#{patient.vendor_id}",
                          headers: { 'Authorization' => "Bearer #{auth_token}" },
                          times: 1
       end
 
       context 'patient does not exist in record vendor' do
         before do
-          stub_request(:get, "http://vendor-one/patients/#{patient.vendor_id}")
+          stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
             .to_return(status: 404)
         end
 
@@ -81,7 +82,7 @@ RSpec.describe '/patients/:patient_id/record' do
         end
 
         before do
-          stub_request(:get, "http://vendor-one/patients/#{patient.vendor_id}")
+          stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
             .to_return(status: 200, body: vendor_record.to_json)
         end
 
@@ -101,7 +102,7 @@ RSpec.describe '/patients/:patient_id/record' do
 
       context 'vendor API is down' do
         before do
-          stub_request(:get, "http://vendor-one/patients/#{patient.vendor_id}")
+          stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
             .to_timeout
         end
 
@@ -111,7 +112,122 @@ RSpec.describe '/patients/:patient_id/record' do
 
       context 'vendor API returns system error' do
         before do
-          stub_request(:get, "http://vendor-one/patients/#{patient.vendor_id}")
+          stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
+            .to_return(status: 500)
+        end
+
+        it { expect(response).to have_attributes(status: 503) }
+        it { expect(response.body).to be_empty }
+      end
+    end
+  end
+
+
+  context 'patient exists for records vendor "two"' do
+    let(:vendor_base_url) { 'http://vendor-two' }
+    let!(:patient) do
+      create :patient,
+             records_vendor: 'two',
+             vendor_id: 52
+    end
+
+    context 'authentication API is down' do
+      before do
+        stub_request(:get, "#{vendor_base_url}/auth_tokens/1")
+          .to_timeout
+      end
+
+      it { expect(response).to have_attributes(status: 503) }
+      it { expect(response.body).to be_empty }
+    end
+
+    context 'authentication API returns system error' do
+      before do
+        stub_request(:get, "#{vendor_base_url}/auth_tokens/1")
+          .to_return(status: 500)
+      end
+
+      it { expect(response).to have_attributes(status: 503) }
+      it { expect(response.body).to be_empty }
+    end
+
+    context 'authentication API returns token' do
+      let(:auth_token) { Faker::Alphanumeric.alphanumeric }
+
+      before do
+        stub_request(:get, "#{vendor_base_url}/auth_tokens/1")
+          .to_return(status: 200, body: { "id": "1", "auth_token": auth_token }.to_json)
+
+        stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+      end
+
+      it 'uses authentication token in subsequent requests' do
+        response
+
+        assert_requested :get, "#{vendor_base_url}/records/#{patient.vendor_id}",
+                         headers: { 'Authorization' => "Bearer #{auth_token}" },
+                         times: 1
+      end
+
+      context 'patient does not exist in record vendor' do
+        before do
+          stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+            .to_return(status: 404)
+        end
+
+        it { expect(response).to have_attributes(status: 404) }
+        it { expect(response.body).to be_empty }
+      end
+
+      context 'patient exists in vendor' do
+        let(:vendor_record) do
+          {
+            "id": patient.vendor_id,
+            "name": "George Costanza",
+            "birthdate": "1984-09-07",
+            "province_code": "ON",
+            "clinic_id": "7",
+            "allergies_list": [
+              "hair",
+              "mean people",
+              "paying the bill"
+            ],
+            "medical_visits_recently": 17
+          }
+        end
+
+        before do
+          stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+            .to_return(status: 200, body: vendor_record.to_json)
+        end
+
+        it { expect(response).to have_attributes(status: 200) }
+
+        it 'returns the patient record from vendor one' do
+          expected_json = {
+            'patient_id' => patient.id,
+            'province' => 'ON',
+            'allergies' => ['hair', 'mean people', 'paying the bill'],
+            'num_medical_visits' => 17
+          }
+
+          expect(json_response).to eq(expected_json)
+        end
+      end
+
+      context 'vendor API is down' do
+        before do
+          stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+            .to_timeout
+        end
+
+        it { expect(response).to have_attributes(status: 503) }
+        it { expect(response.body).to be_empty }
+      end
+
+      context 'vendor API returns system error' do
+        before do
+          stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
             .to_return(status: 500)
         end
 

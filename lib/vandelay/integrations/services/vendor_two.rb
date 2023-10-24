@@ -8,7 +8,7 @@ require_relative '../models/vendor_record'
 module Vandelay
   module Integrations
     module Services
-      class VendorOne
+      class VendorTwo
         ALL_NET_HTTP_ERRORS = [
           Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
           Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
@@ -25,7 +25,7 @@ module Vandelay
           when '200'
             json_hash = JSON.parse response.body, { symbolize_names: true }
 
-            Integrations::Models::VendorRecordResult.success VendorRecord.from_vendor_one_response(json_hash)
+            Integrations::Models::VendorRecordResult.success VendorRecord.from_vendor_two_response(json_hash)
           when '404'
             Integrations::Models::VendorRecordResult.not_found
           else
@@ -48,13 +48,13 @@ module Vandelay
         end
 
         def fetch_auth_token
-          response = Net::HTTP.get_response(vendor_one_uri '/auth/1')
+          response = Net::HTTP.get_response(vendor_two_uri '/auth_tokens/1')
 
           return nil if response.code != '200'
 
           json_hash = JSON.parse response.body, { symbolize_names: true }
 
-          json_hash[:token]
+          json_hash[:auth_token]
         rescue JSON::ParserError
           return nil
         end
@@ -62,16 +62,16 @@ module Vandelay
         # @return [Net::HTTPResponse]
         def fetch_patient_record(vendor_id, token)
           Net::HTTP.get_response(
-            vendor_one_uri("/patients/#{vendor_id}"),
+            vendor_two_uri("/records/#{vendor_id}"),
             {'Authorization' => "Bearer #{token}"})
         end
 
-        def vendor_one_base_url
-          @vendor_one_base_url ||= Vandelay.config.dig('integrations', 'vendors', 'one', 'api_base_url')
+        def vendor_two_base_url
+          @vendor_two_base_url ||= Vandelay.config.dig('integrations', 'vendors', 'two', 'api_base_url')
         end
 
-        def vendor_one_uri(path)
-          URI::HTTP.build(host: vendor_one_base_url, path: path)
+        def vendor_two_uri(path)
+          URI::HTTP.build(host: vendor_two_base_url, path: path)
         end
       end
     end
