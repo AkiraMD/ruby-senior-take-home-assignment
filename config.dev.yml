@@ -3,6 +3,6 @@ persistence:
 integrations:
   vendors:
     one:
-      api_base_url: mock_api_one:80
+      api_base_url: http://mock_api_one:80
     two:
-      api_base_url: mock_api_two:80
+      api_base_url: http://mock_api_two:80

@@ -3,7 +3,7 @@ persistence:
 integrations:
   vendors:
     one:
-      api_base_url: vendor-one
+      api_base_url: http://vendor-one
     two:
-      api_base_url: vendor-two
+      api_base_url: http://vendor-two
 environment: test

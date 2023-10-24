@@ -3,7 +3,7 @@
 module Vandelay
   module Integrations
     module Util
-      # Wrapper around Net::HTTP to simplify error handling
+      # Wrapper around Net::HTTP to simplify error handling and URI parsing
       # TODO: Replace Net::HTTP with faraday
       class RestClient
         ALL_NET_HTTP_ERRORS = [
@@ -18,13 +18,16 @@ module Vandelay
         end
 
         def get(path, headers = {})
-          http_response = Net::HTTP.get_response(
-            URI::HTTP.build(host: @base_uri, path: path),
-            headers
-          )
+          uri = URI.parse(@base_uri)
+          request_path = (uri.path + path).split('/').reject(&:empty?).join('/').prepend '/'
+
+          http = Net::HTTP.new(uri.host, uri.port)
+          request = Net::HTTP::Get.new request_path
+          headers.each { |key, value| request[key] = value }
+
+          http_response = http.request(request)
 
           RestResponse.new http_response, nil
-
         rescue *ALL_NET_HTTP_ERRORS => e
           return RestResponse.new nil, e
         end
