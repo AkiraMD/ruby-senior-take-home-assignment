@@ -4,15 +4,18 @@ require 'net/http'
 
 require_relative '../models/vendor_record_result'
 require_relative '../models/vendor_record'
+require_relative '../util/rest_client'
 
 module Vandelay
   module Integrations
     module Services
       class VendorTwo
-        ALL_NET_HTTP_ERRORS = [
-          Timeout::Error, Errno::EINVAL, Errno::ECONNRESET, EOFError,
-          Net::HTTPBadResponse, Net::HTTPHeaderSyntaxError, Net::ProtocolError
-        ]
+        def initialize
+          super
+
+          @rest_client = Integrations::Util::RestClient.new(
+            Vandelay.config.dig('integrations', 'vendors', 'two', 'api_base_url'))
+        end
 
         # @param [String] vendor_id
         # @return [Vandelay::Integrations::Models::VendorRecordResult]
@@ -21,19 +24,10 @@ module Vandelay
 
           response = fetch_patient_record vendor_id, auth_token
 
-          case response.code
-          when '200'
-            json_hash = JSON.parse response.body, { symbolize_names: true }
+          return Integrations::Models::VendorRecordResult.not_found if response.not_found?
+          return Integrations::Models::VendorRecordResult.unexpected_error unless response.success?
 
-            Integrations::Models::VendorRecordResult.success VendorRecord.from_vendor_two_response(json_hash)
-          when '404'
-            Integrations::Models::VendorRecordResult.not_found
-          else
-            Integrations::Models::VendorRecordResult.unexpected_error
-          end
-        rescue *ALL_NET_HTTP_ERRORS, JSON::ParserError
-          # TODO: replace net-http with faraday
-          return Integrations::Models::VendorRecordResult.unexpected_error
+          Integrations::Models::VendorRecordResult.success VendorRecord.from_vendor_two_response(response.json)
         end
 
         private
@@ -44,34 +38,21 @@ module Vandelay
           # tests will mock auth token API so do not cache the value
           @auth_token = nil if @env == 'test'
 
-          @auth_token ||= fetch_auth_token
+          auth_token_response = fetch_auth_token
+
+          @auth_token = auth_token_response.success? ? auth_token_response.json[:auth_token] : nil
         end
 
+        # @return [Vandelay::Integrations::Util::RestResponse]
         def fetch_auth_token
-          response = Net::HTTP.get_response(vendor_two_uri '/auth_tokens/1')
-
-          return nil if response.code != '200'
-
-          json_hash = JSON.parse response.body, { symbolize_names: true }
-
-          json_hash[:auth_token]
-        rescue JSON::ParserError
-          return nil
+          @rest_client.get('/auth_tokens/1')
         end
 
-        # @return [Net::HTTPResponse]
+        # @return [Vandelay::Integrations::Util::RestResponse]
         def fetch_patient_record(vendor_id, token)
-          Net::HTTP.get_response(
-            vendor_two_uri("/records/#{vendor_id}"),
+          @rest_client.get(
+            "/records/#{vendor_id}",
             {'Authorization' => "Bearer #{token}"})
-        end
-
-        def vendor_two_base_url
-          @vendor_two_base_url ||= Vandelay.config.dig('integrations', 'vendors', 'two', 'api_base_url')
-        end
-
-        def vendor_two_uri(path)
-          URI::HTTP.build(host: vendor_two_base_url, path: path)
         end
       end
     end
