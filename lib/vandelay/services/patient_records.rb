@@ -21,7 +21,7 @@ module Vandelay
         return cached_record unless cached_record.nil?
 
         fresh_record = fetch_record_from_api patient
-        @cache[patient.id] = fresh_record
+        @cache[patient.id] = fresh_record unless fresh_record.unexpected_error?
         fresh_record
       end
 

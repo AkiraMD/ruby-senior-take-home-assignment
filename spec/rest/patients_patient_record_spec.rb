@@ -104,21 +104,64 @@ RSpec.describe '/patients/:patient_id/record' do
         end
 
         context 'patients record was last requested 9 minutes ago' do
-          before do
-            Timecop.travel Time.now - (60 * 9) do
-              get '/patients/1/record'
-            end
-            Timecop.freeze
+          context 'patient record was returned successfully' do
+            before do
+              Timecop.travel Time.now - (60 * 9) do
+                get '/patients/1/record'
+              end
+              Timecop.freeze
 
-            stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
-              .to_return(status: 500)
+              stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
+                .to_return(status: 500)
+            end
+
+            it 'uses cached patient record' do
+              expect(response).to have_attributes(status: 200)
+
+              assert_requested :get, "#{vendor_base_url}/patients/#{patient.vendor_id}",
+                               times: 1
+            end
           end
 
-          it 'uses cached patient record' do
-            expect(response).to have_attributes(status: 200)
+          context 'patient record was not found' do
+            before do
+              stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
+                .to_return(status: 404)
 
-            assert_requested :get, "#{vendor_base_url}/patients/#{patient.vendor_id}",
-                             times: 1
+              Timecop.travel Time.now - (60 * 9) do
+                get '/patients/1/record'
+              end
+              Timecop.freeze
+            end
+
+            it 'uses cached patient record' do
+              expect(response).to have_attributes(status: 404)
+
+              assert_requested :get, "#{vendor_base_url}/patients/#{patient.vendor_id}",
+                               times: 1
+            end
+          end
+
+          context 'patient record request could not be completed' do
+            before do
+              stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
+                .to_return(status: 503)
+
+              Timecop.travel Time.now - (60 * 9) do
+                get '/patients/1/record'
+              end
+              Timecop.freeze
+
+              stub_request(:get, "#{vendor_base_url}/patients/#{patient.vendor_id}")
+                .to_return(status: 200, body: vendor_record.to_json)
+            end
+
+            it 'does not use cached patient record' do
+              expect(response).to have_attributes(status: 200)
+
+              assert_requested :get, "#{vendor_base_url}/patients/#{patient.vendor_id}",
+                               times: 2
+            end
           end
         end
 
@@ -256,21 +299,64 @@ RSpec.describe '/patients/:patient_id/record' do
         end
 
         context 'patients record was last requested 9 minutes ago' do
-          before do
-            Timecop.travel Time.now - (60 * 9) do
-              get '/patients/1/record'
-            end
-            Timecop.freeze
+          context 'patient record was returned successfully' do
+            before do
+              Timecop.travel Time.now - (60 * 9) do
+                get '/patients/1/record'
+              end
+              Timecop.freeze
 
-            stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
-              .to_return(status: 500)
+              stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+                .to_return(status: 500)
+            end
+
+            it 'uses cached patient record' do
+              expect(response).to have_attributes(status: 200)
+
+              assert_requested :get, "#{vendor_base_url}/records/#{patient.vendor_id}",
+                               times: 1
+            end
           end
 
-          it 'uses cached patient record' do
-            expect(response).to have_attributes(status: 200)
+          context 'patient record was not found' do
+            before do
+              stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+                .to_return(status: 404)
 
-            assert_requested :get, "#{vendor_base_url}/records/#{patient.vendor_id}",
-                             times: 1
+              Timecop.travel Time.now - (60 * 9) do
+                get '/patients/1/record'
+              end
+              Timecop.freeze
+            end
+
+            it 'uses cached patient record' do
+              expect(response).to have_attributes(status: 404)
+
+              assert_requested :get, "#{vendor_base_url}/records/#{patient.vendor_id}",
+                               times: 1
+            end
+          end
+
+          context 'patient record request could not be completed' do
+            before do
+              stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+                .to_return(status: 503)
+
+              Timecop.travel Time.now - (60 * 9) do
+                get '/patients/1/record'
+              end
+              Timecop.freeze
+
+              stub_request(:get, "#{vendor_base_url}/records/#{patient.vendor_id}")
+                .to_return(status: 200, body: vendor_record.to_json)
+            end
+
+            it 'does not use cached patient record' do
+              expect(response).to have_attributes(status: 200)
+
+              assert_requested :get, "#{vendor_base_url}/records/#{patient.vendor_id}",
+                               times: 2
+            end
           end
         end
 
