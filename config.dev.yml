@@ -3,6 +3,12 @@ persistence:
 integrations:
   vendors:
     one:
-      api_base_url: mock_api_one:80
+      api_base_url: http://localhost:3060
+      auth_path: /auth/%d
+      patients_path: /patients
+      patient_path: /patients/%d
     two:
-      api_base_url: mock_api_two:80
+      api_base_url: http://localhost:3061
+      auth_path: /auth_tokens/%d
+      patients_path: /records
+      patient_path: /records/%d
