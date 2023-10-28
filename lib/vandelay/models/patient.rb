@@ -21,6 +21,15 @@ module Vandelay
         Vandelay::Models::Patient.new(**result)
       end
 
+      def vendor_integration
+        case records_vendor
+        when 'one'
+          return Vandelay::Integrations::Vendors::One.new(self)
+        when 'two'
+          return Vandelay::Integrations::Vendors::Two.new(self)
+        end
+      end
+
     end
   end
 end
