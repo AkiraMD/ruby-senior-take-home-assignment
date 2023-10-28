@@ -8,3 +8,7 @@ gem 'sinatra-contrib'
 gem 'puma'
 gem 'rackup'
 gem 'irb'
+
+group :test do
+  gem 'rack-test'
+end
