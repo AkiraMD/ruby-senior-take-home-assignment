@@ -6,7 +6,7 @@ module Vandelay
       API_BASE_URL = Vandelay.config["integrations"]["vendors"]["two"]["api_base_url"]
       REQUIRED_FIELDS = ["province_code", "allergies_list",  "medical_visits_recently"]
 
-      def initalize()
+      def initalize
         @auth_token ||= fetch_auth_token
       end
 

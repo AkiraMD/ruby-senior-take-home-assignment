@@ -21,7 +21,7 @@ module Vandelay
         app.get '/patients/:patient_id/record' do
           patient_id = params[:patient_id]
           patient = Vandelay::REST::Patients.patients_srvc.retrieve_one(patient_id)
-          record = Vandelay::REST::Patients.patient_records_srvc.retrieve_record_for_patient(patient)
+          record = Vandelay::REST::Patients.patient_records_srvc.retrieve_record_for_patient(patient) if patient
           if record.empty?
             json({ error: "No record found for patient_id: #{patient_id}"})
           else

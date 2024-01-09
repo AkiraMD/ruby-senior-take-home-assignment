@@ -5,6 +5,7 @@ RSpec.describe 'Vandelay::Services::PatientRecords', type: :service do
   let(:patient_service) { Vandelay::Services::PatientRecords.new }
   let(:vendor_one_patient) { Vandelay::Models::Patient.with_id(2) }
   let(:vendor_two_patient) { Vandelay::Models::Patient.with_id(3) }
+  let(:unknown_patient) { Vandelay::Models::Patient.with_id(1) }
 
   describe "#retrieve_record_for_patient" do
     it "should get correct record for the patient from Vendor One" do      
@@ -21,6 +22,11 @@ RSpec.describe 'Vandelay::Services::PatientRecords', type: :service do
       expect(response[:province]).to eq('ON')
       expect(response[:allergies]).to eq(["hair", "mean people", "paying the bill"])
       expect(response[:num_medical_visits]).to eq(17)
+    end
+
+    it "should give error if no vendor exists for patient" do
+      response = patient_service.retrieve_record_for_patient(unknown_patient)
+      expect(response[:error]).to eq('No vendor exists for patient id: 1')
     end
   end
 end
