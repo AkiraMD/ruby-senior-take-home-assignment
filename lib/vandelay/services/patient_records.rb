@@ -53,7 +53,7 @@ module Vandelay
           value = @cache.get(cache_key)
           JSON.parse(value)
         else
-          value = vendor_integration.fetch_patient_record(vendor_patient_id)
+          value = vendor_integration.fetch_patient_record(@vendor_patient_id)
           @cache.set(cache_key, value.to_json, expiry: 10_000)
           value
         end
