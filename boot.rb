@@ -5,6 +5,7 @@ $: << BASE_PATH + "/lib"
 
 require 'vandelay'
 require 'vandelay/util/db'
+require 'vandelay/util/cache'
 require 'vandelay/models'
 require 'vandelay/integrations'
 

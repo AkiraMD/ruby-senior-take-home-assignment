@@ -12,10 +12,15 @@ module Vandelay
         return nil unless token
 
         headers = { 'Authorization' => "Bearer #{token}" }
-        response = send_request(source_records_endpoint, headers)
-        return nil unless response
+        json_data = Vandelay::Util::Cache.fetch("#{self.class.name.downcase}_patients_info") do # Default expiration is 10 minutes
+          response = send_request(source_records_endpoint, headers)
+          return nil unless response
+  
+          response.body
+        end
+        return nil unless json_data
 
-        patient_records = JSON.parse(response.body)
+        patient_records = JSON.parse(json_data)
         patient = find_patient(patient_records, patient_vendor_id)
         return patient_information(patient) if patient
 
