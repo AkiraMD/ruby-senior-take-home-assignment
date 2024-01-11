@@ -13,6 +13,7 @@ class RESTServer < Sinatra::Base
     set :root, File.dirname(__FILE__) + "/lib/vandelay/rest"
     set :server, %w[puma]
     set :json_encoder, :to_json
+    set :show_exceptions, false
   end
 
   register Vandelay::REST
