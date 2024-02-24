@@ -34,7 +34,7 @@ module Vandelay
         # Return a 404 status code if patient record is not found
         return { error: 'Patient not found', status: 404, system_time: Vandelay.system_time_now.iso8601 } unless patient_record
 
-        # Return patient if patient is not found
+        # Return patient record
         patient_record
       end
     end

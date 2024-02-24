@@ -11,4 +11,3 @@ RUN bundle install
 
 RUN rm /app/Gemfile
 RUN rm /app/Gemfile.lock
-
