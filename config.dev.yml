@@ -1,8 +1,15 @@
 persistence:
   pg_url: postgresql://vandelay_app:secret@postgres:5432/vandelay
+  redis:
+    host: redis
+    expires_in: 10
 integrations:
   vendors:
     one:
-      api_base_url: mock_api_one:80
+      service_class: Vendor1Service
+      api_base_url: http://mock_api_one:80
     two:
-      api_base_url: mock_api_two:80
+      service_class: Vendor2Service
+      api_base_url: http://mock_api_two:80
+    no_vendor:
+      service_class: NoVendorService
