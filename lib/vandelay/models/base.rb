@@ -9,7 +9,7 @@ module Vandelay
         data.each do |prop, val|
           self.instance_variable_set "@#{prop}", val
           self.class.class_eval do
-            define_method("#{prop}") { eval "@#{prop}" }
+            attr_accessor prop
           end
         end
       end
