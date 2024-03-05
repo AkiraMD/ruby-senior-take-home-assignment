@@ -1,4 +1,4 @@
-Dir[File.dirname(__FILE__) + '/rest/**.rb'].each {|rb| require_relative rb }
+Dir[File.dirname(__FILE__) + '/rest/**.rb'].each {|rb| require_relative rb}
 
 module Vandelay
   module REST
