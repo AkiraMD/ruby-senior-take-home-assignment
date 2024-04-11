@@ -10,6 +10,11 @@ module Vandelay
       def retrieve_one(patient_id)
         Vandelay::Models::Patient.with_id(patient_id)
       end
+      
+      def records(patient_id)
+        Vandelay::Models::Patient.find_patient_record(patient_id)
+      end
+      
     end
   end
 end

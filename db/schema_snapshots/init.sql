@@ -47,3 +47,17 @@ INSERT INTO patients (
   'two',
   '16'
 );
+
+CREATE TABLE IF NOT EXISTS records (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255),
+    visit_number INT,
+    patient_id INT,
+    FOREIGN KEY (patient_id) REFERENCES patients(id)
+);
+INSERT INTO records (title, visit_number, patient_id)
+VALUES ('Medical Report', 2, 2),
+       ('Lab Results', 1, 2),
+       ('Treatment Plan', 3, 3),
+       ('Diagnostic Imaging', 2, 3),
+       ('Prescription History', 1, 2);
