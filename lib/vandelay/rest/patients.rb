@@ -12,7 +12,11 @@ module Vandelay
           results = Vandelay::REST::Patients.patients_srvc.retrieve_all
           json(results)
         end
+        app.get '/:id' do
+         results = Vandelay::REST::Patients.patients_srvc.retrieve_one(params[:id])
+           json(results) 
+        end
       end
-    end
+    end 
   end
 end
