@@ -7,12 +7,17 @@ module Vandelay
       def retrieve_record_for_patient(patient)
         return nil if patient.records_vendor.nil?
 
-        client = vendor_api_client(patient.records_vendor)
-        record = client.get_patient_record(patient.vendor_id)
+        records_vendor = patient.records_vendor
+        ten_minutes = 10 * 60
 
-        {
-          patient_id: patient.id
-        }.merge(record)
+        Vandelay::Util::Cache.new.fetch("#{records_vendor}-#{patient.id}", expires_in: ten_minutes) do
+          client = vendor_api_client(patient.records_vendor)
+          record = client.get_patient_record(patient.vendor_id)
+
+          {
+            patient_id: patient.id
+          }.merge(record)
+        end
       end
 
       def vendor_api_client(vendor_name)

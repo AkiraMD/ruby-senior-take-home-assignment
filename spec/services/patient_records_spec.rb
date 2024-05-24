@@ -17,10 +17,10 @@ RSpec.describe Vandelay::Services::PatientRecords, type: :service do
 
       it 'calls the correct vendor api client' do
         expect(subject).to eq({
-          patient_id: '2',
-          province: 'QC',
-          allergies: ['work', 'conformity', 'paying taxes'],
-          num_medical_visits: 1
+          'patient_id' => '2',
+          'province' => 'QC',
+          'allergies' => ['work', 'conformity', 'paying taxes'],
+          'num_medical_visits' => 1
         })
       end
     end
@@ -30,10 +30,10 @@ RSpec.describe Vandelay::Services::PatientRecords, type: :service do
 
       it 'calls the correct vendor api client' do
         expect(subject).to eq({
-          patient_id: '3',
-          province: 'ON',
-          allergies: ['hair', 'mean people', 'paying the bill'],
-          num_medical_visits: 17
+          'patient_id' => '3',
+          'province' => 'ON',
+          'allergies' => ['hair', 'mean people', 'paying the bill'],
+          'num_medical_visits' => 17
         })
       end
     end

@@ -1,5 +1,6 @@
 persistence:
   pg_url: postgresql://vandelay_app:secret@postgres-test:5432/vandelay_test
+  redis_url: redis://redis:6379/0
 integrations:
   vendors:
     one:
