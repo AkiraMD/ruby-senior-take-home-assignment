@@ -18,6 +18,16 @@ module Vandelay
       def token_name
         'auth_token'
       end
+
+      def get_patient_record(patient_id)
+        json = super
+
+        {
+          province: json['province_code'],
+          allergies: json['allergies_list'],
+          num_medical_visits: json['medical_visits_recently']
+        }
+      end
     end
   end
 end

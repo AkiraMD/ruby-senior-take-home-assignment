@@ -9,7 +9,10 @@ module Vandelay
         data.each do |prop, val|
           self.instance_variable_set "@#{prop}", val
           self.class.class_eval do
-            define_method("#{prop}") { val } unless method_defined?(prop)
+            # Tried to fix this by adding the following line, but it didn't work
+            # It caused problems in the specs. Values were getting cached between tests
+            # define_method("#{prop}") { val } unless method_defined?(prop)
+            define_method("#{prop}") { val }
           end
         end
       end
