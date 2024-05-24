@@ -9,12 +9,15 @@ module Vandelay
         data.each do |prop, val|
           self.instance_variable_set "@#{prop}", val
           self.class.class_eval do
+            # Tried to fix this by adding the following line, but it didn't work
+            # It caused problems in the specs. Values were getting cached between tests
+            # define_method("#{prop}") { val } unless method_defined?(prop)
             define_method("#{prop}") { val }
           end
         end
       end
 
-      def self.with_connection(&block)
+      def self.with_connection(&)
         raise ArgumentError.new("Must provide a block to this method!") unless block_given?
 
         Vandelay::Util::DB.with_connection do |conn|
@@ -22,7 +25,8 @@ module Vandelay
         end
       end
 
-      def to_json(_opts)
+      # Use *_args to allow no arguments to be passed
+      def to_json(*_args)
         JSON.dump(self.to_h)
       end
 
