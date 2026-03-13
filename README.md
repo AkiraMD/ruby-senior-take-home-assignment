@@ -1,3 +1,7 @@
+# Archived Repository
+
+This repository has been archived and is no longer maintained.
+
 # Patients REST API Service
 ## THVC Take-home assignment
 
